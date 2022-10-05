@@ -32,4 +32,3 @@ class Discount(models.Model):
     is_active = models.BooleanField(default=True)
     discount_type = models.CharField(max_length=10,
                                      choices=DISCOUNT_TYPE_CHOICES)
-
