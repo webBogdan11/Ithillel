@@ -25,6 +25,6 @@ jobs:
         pip install -r HM7/requirements.txt
     - name: Run Flake8
       run: |
-        cd HM5
+        cd HM7
         flake8 .
         
