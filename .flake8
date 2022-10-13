@@ -3,7 +3,10 @@ extend-ignore = E203
 exclude =
     .git,
     HM3,
+    HM4,
     HM5/shop/items/migrations/*
+    HM7/shop/orders/migrations/*
+    HM7/shop/items/migrations/*
     __pycache__,
     docs/source/conf.py,
     old,
