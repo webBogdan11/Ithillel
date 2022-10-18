@@ -1,6 +1,7 @@
 import environ
 from pathlib import Path
 
+from django.urls import reverse_lazy, reverse
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -26,9 +27,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'items',
+    'items.apps.ItemsConfig',
     'orders',
-    'feedback'
+    'feedback',
+    'users',
+
 ]
 
 MIDDLEWARE = [
@@ -117,3 +120,7 @@ MEDIA_ROOT = 'media'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'login/'
+LOGOUT_URL = 'logout/'

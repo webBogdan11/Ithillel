@@ -1,0 +1,18 @@
+<h1>Login</h1>
+
+{% if form.errors %}
+  <p>
+    Your username and password didn't match.
+    Please try again.
+  </p>
+{% endif %}
+
+<p>Please, use the following form to log-in. If you don't have an account</p>
+<p><a href="{% url 'users:register' %}">register here</a></p>
+
+<form action="{% url 'users:login' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p><input type="submit" value="Log-in"></p>
+</form>

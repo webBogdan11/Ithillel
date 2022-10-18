@@ -2,13 +2,11 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
-from feedback.urls import urlpatterns as feedbacks_urlpatterns
-from items.urls import urlpatterns as items_urlpatterns
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(items_urlpatterns)),
-    path('', include(feedbacks_urlpatterns)),
+    path('', include('users.urls')),
+    path('', include('items.urls')),
+    path('', include('feedback.urls')),
 ]
 
 if settings.DEBUG:
