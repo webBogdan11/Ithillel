@@ -4,10 +4,10 @@ exclude =
     .git,
     HM3,
     HM4,
-    HM8/shop/items/migrations/*
-    HM8/shop/orders/migrations/*
-    HM8/shop/items/migrations/*
-    HM8/shop/feedback/migrations/*
+    HM10/shop/items/migrations/*
+    HM10/shop/orders/migrations/*
+    HM10/shop/items/migrations/*
+    HM10/shop/feedback/migrations/*
     __pycache__,
     docs/source/conf.py,
     old,
