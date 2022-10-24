@@ -1,5 +1,7 @@
 from os import path
 from django.db import models
+
+from shop import settings
 from shop.mixins.models_mixins import PKMixin
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 
@@ -24,9 +26,9 @@ class Product(PKMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to=upload_image,
+                              default='images/product/no_food',
                               blank=True,
-                              null=True
-    )
+                              null=True,)
     category = models.ForeignKey(
         "products.Category",
         on_delete=models.CASCADE

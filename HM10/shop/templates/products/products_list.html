@@ -4,67 +4,70 @@
 {% block products_active %}active{%endblock%}
 
 {% block content %}
-<div class="container my-5"><div class="row justify-content-center gy-5">
-    {% for product in products %}
-
-    {% if product.products.all %}
+<div class="container my-5">
+    <div class="row justify-content-center gy-5">
+        {% for product in products %}
+        {% if product.products.all %}
         <div class="col-12 col-xl-6">
-    <div class="card h-100" style="width: 36rem;">
-                                    <figure class="text-center">
-                                <img src="{{ product.image.url }}"
-                                     class="product-image p-3"
-                                     alt="{{ product.name }}">
-                            </figure>
-  <div class="card-body">
-      <h5 class="card-title text-center"><a href="{% url 'products:products_detail' product.id %}">{{product.name}}</a></h5>
-      <div class="text-center">
-      <small class="text-muted">{{product.category}}</small>
-      </div>
-      <div class="container-fluid mt-3">
-      <div class="row">
-          <div class="col-6">
-        <p class="card-text">{{product.description}}</p>
-          </div>
+            <div class="card h-100" style="width: 36rem;">
+                <figure class="text-center">
+                    <img src="{{ product.image.url }}"
+                         class="product-image p-3"
+                         alt="{{ product.name }}">
+                </figure>
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a href="{% url 'products:products_detail' product.id %}">{{product.name}}</a>
+                    </h5>
+                    <div class="text-center">
+                        <small class="text-muted">{{product.category}}</small>
+                    </div>
+                    <div class="container-fluid mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="card-text">{{product.description}}</p>
+                            </div>
 
-          <div class="col-6">
-              <p class="card-text"><strong>List of items</strong></p>
-              <ol class="list-group list-group-numbered">
-              {% for item in product.products.all %}
-                   <li class="list-group-item">{{item.name}}</li>
-              {% endfor %}
-              </ol>
-          </div>
-      </div>
-      </div>
-      <p class="card-text"><strong>{{product.price}}</strong></p>
-      <div class="text-center mt-3">
-    <a href="#" class="btn btn-primary ">BUY</a>
-      </div>
-  </div></div>
+                            <div class="col-6">
+                                <p class="card-text"><strong>List of items</strong></p>
+                                <ol class="list-group list-group-numbered">
+                                    {% for item in product.products.all %}
+                                    <li class="list-group-item">{{item.name}}</li>
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-text"><strong>{{product.price}}</strong></p>
+                    <div class="text-center mt-3">
+                        <a href="#" class="btn btn-primary ">BUY</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% else %}
+        {% else %}
 
-    <div class="col-6 col-xl-3">
-    <div class="card h-100" style="width: 18rem;">
-        <figure class="text-center">
-            <img src="{{ product.image.url }}" class="product-image p-3" alt="{{ product.name }}">
-        </figure>
-  <div class="card-body">
-      <h5 class="card-title text-center"><a href="{% url 'products:products_detail' product.id %}">{{product.name}}</a></h5>
-      <p><small class="text-muted">{{product.category}}</small></p>
-      <p class="card-text">{{product.description}}</p>
-      <p class="card-text"><strong>{{product.price}}</strong></p>
-      <div class="text-center mt-3">
-        <a href="#" class="btn btn-primary ">BUY</a>
-      </div>
+        <div class="col-6 col-xl-3">
+            <div class="card h-100" style="width: 18rem;">
+                <figure class="text-center">
+                    <img src="{{ product.image.url }}" class="product-image p-3" alt="{{ product.name }}">
+                </figure>
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a href="{% url 'products:products_detail' product.id %}">{{product.name}}</a>
+                    </h5>
+                    <p><small class="text-muted">{{product.category}}</small></p>
+                    <p class="card-text">{{product.description}}</p>
+                    <p class="card-text"><strong>{{product.price}}</strong></p>
+                    <div class="text-center mt-3">
+                        <a href="#" class="btn btn-primary ">BUY</a>
+                    </div>
 
 
-    </div>
-    </div>
-    </div>
-    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-    {% endfor %}
+        {% endfor %}
 
-{% endblock %}
+        {% endblock %}
 

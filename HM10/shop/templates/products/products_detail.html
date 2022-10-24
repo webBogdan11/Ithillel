@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block products_active %}active{%endblock%}
+
+{% block content %}
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center">{{product.name}}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <img src="{{ product.image.url }}"
+                     class="img-fluid p-3"
+                     alt="{{ product.name }}">
+            </div>
+
+            <div class="col-6 align-self-center">
+                <p class="text-center">{{product.description}}</p>
+            </div>
+        </div>
+        {% if product.products.all %}
+        <div class="row">
+            <div class="col-12">
+                <p class="card-text"><strong>List of items</strong></p>
+                <ol class="list-group list-group-numbered">
+                {% for item in product.products.all %}
+                   <li class="list-group-item">{{item.name}}</li>
+                {% endfor %}
+              </ol>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-12" style="margin-top: 20px;">
+                <p class="card-text"><strong>{{product.price}}</strong></p>
+            </div>
+
+            <div class="col-12 text-center" style="margin-top: 20px;">
+                 <a href="#" class="btn btn-primary ">BUY</a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
