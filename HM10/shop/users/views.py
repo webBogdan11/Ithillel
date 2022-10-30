@@ -15,4 +15,4 @@ class CreateUserView(CreateView):
         new_user.save()
         login(self.request, new_user)
 
-        return HttpResponseRedirect(reverse_lazy('items:index'))
+        return HttpResponseRedirect(reverse_lazy('products:index'))

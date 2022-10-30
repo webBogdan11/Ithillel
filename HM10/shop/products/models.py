@@ -1,7 +1,6 @@
 from os import path
 from django.db import models
 
-from shop import settings
 from shop.mixins.models_mixins import PKMixin
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 
