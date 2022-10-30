@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load orders_extra %}
+{% block cart_active %}active{% endblock %}
+
+{% block content %}
+
+
+<div class="container" style="margin-top: 30px; margin-bottom: 30px;">
+    <div class="row justify-content-md-center">
+        {% for product in request.user.order|product_list %}
+        <div class="col-6 p-1">
+            <div class="card h-100 mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <figure class="text-center align-self-center col-md-4">
+                        <img src="{{ product.image.url }}"
+                             class="product-image "
+                             style="width: 150px; "
+                             alt="{{ product.name }}">
+                    </figure>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">
+                                {{ product.description }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
+
+    <p><strong>Total amount:</strong> {{request.user.order|total_amount}}</p>
+    <p>
+    <form method="post" action="{% url 'orders:apply_discount' %}">
+        {% csrf_token %}
+        <label for="code">Text discount code</label><br>
+        <input type="text" name="code" id="code">
+        <p>{{message}}</p>
+        <p><input type="submit" class="btn btn-primary my-2" value="Apply discount"></p>
+    </form>
+    </p>
+    <a href="{% url 'orders:make_purchase' %}" class="btn btn-primary my-2">Purchase</a>
+</div>
+
+
+{% endblock %}

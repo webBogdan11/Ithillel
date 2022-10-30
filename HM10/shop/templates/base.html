@@ -1,4 +1,6 @@
 {% load static %}
+{% load orders_extra %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +33,14 @@
                     <a class="nav-link {% block products_active %}{%endblock%}"
                        href="{% url 'products:products_list'%}">Products</a>
                 </li>
+                {% if request.user.order|active_order %}
+                <li class="nav-item">
+                    <a class="nav-link {% block cart_active %}{%endblock%}"
+                       href="{% url 'orders:orders_form'%}">
+                        Cart {{request.user.order|total_amount}} UAH
+                    </a>
+                </li>
+                {% endif %}
             </ul>
             <ul class="navbar-nav mx-4">
                 {% if request.user.is_authenticated %}

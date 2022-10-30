@@ -1,13 +1,14 @@
-import decimal
-
-from django.shortcuts import render, redirect
 import csv
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView, DetailView
-from products.models import Product, Category
+from django.views.generic import ListView, TemplateView, \
+                                 DetailView, FormView
+from products.models import Product
 
-from products.forms import CsvImport
+
+from products.forms import ImportCSVForm
 
 
 class IndexView(TemplateView):
@@ -50,23 +51,17 @@ def export_csv(request, *args, **kwargs):
     return response
 
 
-def import_csv(request):
-    form = CsvImport()
-    if request.method == "POST":
-        form = CsvImport(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            file = form.cleaned_data['file'].read()
-            file_str = file.decode('utf-8').strip().split('\n')
-            file_csv = csv.reader(file_str, delimiter=',')
-            next(file_csv)
-            for row in file_csv:
-                Product.objects.create(name=row[0],
-                                       description=row[1],
-                                       price=decimal.Decimal(row[2]),
-                                       sku=row[3],
-                                       category=Category.objects.get(name=row[4]))
-            return redirect(reverse_lazy('products:products_list'))
+class ImportCSV(FormView):
+    form_class = ImportCSVForm
+    template_name = 'products/products_csv_import.html'
+    success_url = reverse_lazy('products')
 
-    return render(request,
-                  'products/products_csv_import.html',
-                  {'form': form})
+    @method_decorator(login_required)
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+

@@ -39,7 +39,7 @@
                     </div>
                     <p class="card-text"><strong>{{product.price}}</strong></p>
                     <div class="text-center mt-3">
-                        <a href="#" class="btn btn-primary ">BUY</a>
+                        <a href="{% url 'orders:add_to_order' product.id%}" class="btn btn-primary ">BUY</a>
                     </div>
                 </div>
             </div>
@@ -58,10 +58,8 @@
                     <p class="card-text">{{product.description}}</p>
                     <p class="card-text"><strong>{{product.price}}</strong></p>
                     <div class="text-center mt-3">
-                        <a href="#" class="btn btn-primary ">BUY</a>
+                        <a href="{% url 'orders:add_to_order' product.id%}" class="btn btn-primary ">BUY</a>
                     </div>
-
-
                 </div>
             </div>
         </div>
