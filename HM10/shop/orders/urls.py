@@ -1,11 +1,15 @@
-from django.urls import path
+from django.urls import path, re_path
 from orders import views
 
 app_name = 'orders'
 
 urlpatterns = [
-    path('orders_form/', views.OrderForm.as_view(), name='orders_form'),
-    path('products/add_product/<uuid:pk>', views.order_add_product, name='add_to_order'),
-    path('orders/apply_code', views.order_apply_discount, name='apply_discount'),
-    path('orders/make_purchase', views.order_make_payment, name='make_purchase'),
+    path('cart/', views.CartView.as_view(), name='cart'),
+    re_path(r'cart/(?P<action>add|remove)/',
+            views.UpdateCartView.as_view(),
+            name='update_cart'),
+    path('recalculate/', views.RecalculateCartView.as_view(),
+         name='recalculate_cart'),
+    path('purchase/', views.PurchaseView.as_view(),
+         name='purchase'),
 ]

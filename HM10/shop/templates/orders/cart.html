@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block cart_active %}active{%endblock%}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="row">
+
+
+            <div class="col-12 col-lg-6 offset-lg-3">
+                {% if order %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <form method="post"
+                          action="{% url 'orders:recalculate_cart' %}"
+                          id="recalculateCart">
+                        {% csrf_token %}
+                        {% for product_relation in products_relation.iterator %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ product_relation.product.name }}</td>
+                            <td>
+                                <input class="form-control "
+                                       type="number"
+                                       value="{{ product_relation.quantity }}"
+                                       name="quantity_{{ forloop.counter0 }}">
+                                <input type="hidden"
+                                       name="product_{{ forloop.counter0 }}"
+                                       value="{{ product_relation.product_id }}">
+                            </td>
+                            <td>{{ product_relation.product.price }}</td>
+                            <td>{{ product_relation.full_price }}</td>
+                            <td>
+                                <input type="hidden"
+                                       value="{{ product_relation.product.id  }}"
+                                       name="product">
+                                <input type="submit"
+                                       class="btn btn-danger"
+                                       value="X"
+                                       formaction="{% url 'orders:update_cart' 'remove' %}">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>
+                                <input class="btn btn-primary"
+                                       type="submit"
+                                       value="Recalculate"
+                                >
+                            </td>
+                            <td>
+                                <input class="btn btn-primary"
+                                       type="submit"
+                                       value="Purchase"
+                                       formaction="{% url 'orders:purchase'%}">
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                Total: {{ order.get_total_amount }}
+                            </td>
+                            <td></td>
+                        </tr>
+                    </form>
+                    </tbody>
+                </table>
+                {% else %}
+                <h3>Your cart is empty.</h3>
+                <p>Goto <a href="{% url 'products' %}">products</a>
+                    page and add something good to cart.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
