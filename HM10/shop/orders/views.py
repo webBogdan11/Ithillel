@@ -1,52 +1,65 @@
 from django.shortcuts import render # noqa
-from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.views.generic import RedirectView, TemplateView, View
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from orders.models import Order, Discount
-from products.models import Product
-from orders.forms import DiscountApply
+from django.db.models import F
+from django.urls import reverse_lazy
+
+from orders.mixins import GetCurrentOrderMixin
+from orders.tasks import send_to_console_task
+from orders.forms import UpdateCartOrderForm, RecalculateCartForm
 
 
-class OrderForm(TemplateView):
-    template_name = "orders/orders_form.html"
+class CartView(GetCurrentOrderMixin, TemplateView):
+    template_name = 'orders/cart.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {'order': self.get_object(),
+             'products_relation': self.get_queryset()}
+        )
+        return context
+
+    def get_queryset(self):
+        print(self.get_object().products.through.objects)
+        return self.get_object().products.through.objects\
+            .filter(order=self.get_object()) \
+            .select_related('product') \
+            .annotate(full_price=F('product__price') * F('quantity'))
 
 
-@login_required
-def order_add_product(request, pk):
-    product = Product.objects.get(id=pk)
-    order, _ = Order.objects.get_or_create(
-        user=request.user,
-        is_active=True
-    )
-    order.products.add(product)
+class UpdateCartView(GetCurrentOrderMixin, RedirectView):
 
-    order.save()
+    def post(self, request, *args, **kwargs):
+        form = UpdateCartOrderForm(request.POST, instance=self.get_object())
+        if form.is_valid():
+            form.save(kwargs.get('action'))
+        return self.get(request, *args, **kwargs)
 
-    return HttpResponseRedirect(reverse_lazy("products:products_list"))
-
-
-@login_required
-def order_apply_discount(request):
-    form = DiscountApply(data=request.POST)
-
-    if form.errors:
-        message = form.errors.as_data()["code"][0].message
-    else:
-        discount = form.cleaned_data['code']
-        order = request.user.order.filter(is_active=True)[0]
-        order.discount = discount
-        order.save()
-        message = 'Discount was successfully applied'
-
-    return render(request, 'orders/orders_form.html', context={
-        'message': message,
-    })
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_lazy(
+            'orders:cart' if kwargs['action'] == 'remove' else 'products:products_list')
 
 
-def order_make_payment(request):
-    order = request.user.order.filter(is_active=True)[0]
-    order.is_active = False
-    order.is_paid = True
-    order.save()
-    return render(request, 'orders/orders_payment.html')
+class RecalculateCartView(GetCurrentOrderMixin, RedirectView):
+    url = reverse_lazy('orders:cart')
+
+    def post(self, request, *args, **kwargs):
+        form = RecalculateCartForm(request.POST, instance=self.get_object())
+        if form.is_valid():
+            form.save()
+        return self.get(request, *args, **kwargs)
+
+
+class PurchaseView(GetCurrentOrderMixin, View):
+    template_name = 'orders/cart_purchase.html'
+
+    def post(self, request):
+        self.get_object().pay()
+        send_to_console_task.delay()
+        return render(request, self.template_name)

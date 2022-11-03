@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from orders.models import Order, Discount
+from orders.models import Order, Discount, OrderProductRelation
 
 
 @admin.register(Order)
@@ -9,3 +9,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Discount)
+admin.site.register(OrderProductRelation)
