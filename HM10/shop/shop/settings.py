@@ -1,5 +1,6 @@
 import environ
 from pathlib import Path
+from celery.schedules import crontab
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -25,10 +26,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # my apps
     'orders',
     'feedback',
     'users',
-    'products'
+    'products',
+    'currencies',
+    # extensions
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +132,11 @@ LOGOUT_URL = 'logout/'
 
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = 'django_celery_results.backends.database.DatabaseBackend'
+
+CELERY_BEAT_SCHEDULE = {
+    'Get currency': {
+        'task': 'currencies.tasks.get_currencies',
+        'schedule': crontab(hour='10', minute='1'),
+    }
+}
