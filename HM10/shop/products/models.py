@@ -3,6 +3,7 @@ from django.db import models
 
 from shop.mixins.models_mixins import PKMixin
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
+from currencies.models import CurrencyHistory
 
 
 def upload_image(instance, filename):
@@ -43,6 +44,15 @@ class Product(PKMixin):
         null=True
     )
     products = models.ManyToManyField('products.Product', blank=True)
+
+    @property
+    def price_from_usd(self):
+        usd = CurrencyHistory.objects.filter(
+            currency='USD'
+        ).order_by(
+            '-created_at'
+        ).first()
+        return round(self.price * usd.sale, 2)
 
     def __str__(self):
         return f'{self.name} | {self.price} | {self.sku}'

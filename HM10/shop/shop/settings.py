@@ -137,7 +137,7 @@ CELERY_RESULT_BACKEND = 'django_celery_results.backends.database.DatabaseBackend
 CELERY_BEAT_SCHEDULE = {
     'Get currency': {
         'task': 'currencies.tasks.get_currencies',
-        'schedule': crontab(hour='10', minute='1'),
+        'schedule': crontab(minute='3'),
     }
 }
 
