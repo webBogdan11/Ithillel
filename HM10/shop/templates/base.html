@@ -33,6 +33,10 @@
                     <a class="nav-link {% block products_active %}{%endblock%}"
                        href="{% url 'products:products_list'%}">Products</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {% block feedbacks_active %}{%endblock%}"
+                       href="{% url 'feedback:feedbacks'%}">Feedbacks</a>
+                </li>
                 <li class="ml-auto nav-item">
                     <a class="nav-link {% block cart_active %}{%endblock%}" aria-current="page"
                        href="{% url 'orders:cart' %}">
