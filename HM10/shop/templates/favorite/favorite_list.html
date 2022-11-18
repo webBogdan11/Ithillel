@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block favorite_active %}active{%endblock%}
+
+{% block content %}
+<div class="container" style="margin-top:30px;margin-bottom:30px">
+    <div class="row">
+        {% for favorite in request.user.favorites.all %}
+        <div class="col-xl-4 mb-5">
+            <div class="card h-100" style="width: 20rem;">
+                <img class="card-img-top "
+                     src="{{ favorite.product.image.url }}"
+                     alt="{{ favorite.product.name }}"
+                     style="width: 100%;height: 15vw;object-fit: cover">
+                <div class="card-body">
+                    <h5 class="card-title">{{favorite.product.name}}</h5>
+                    <p class="card-text">{{favorite.product.description}}</p>
+                    <div class="text-center mt-3">
+                        {% include 'parts/forms/add_to_cart.html' with product_id=favorite.product.id %}
+                    </div>
+                    <div class="text-center mt-3">
+                        {% include 'parts/forms/remove_from_favorite.html' with product_id=favorite.product.id %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -37,9 +37,12 @@
                             </div>
                         </div>
                     </div>
-                    <p class="card-text"><strong>{{product.price_from_usd}}</strong></p>
+                    <p class="card-text"><strong>{{ product.exchange_price }} UAH</strong></p>
                     <div class="text-center mt-3">
                         {% include 'parts/forms/add_to_cart.html' with product_id=product.id %}
+                    </div>
+                    <div class="text-center mt-3">
+                        {% include 'parts/forms/add_to_favorite.html' with product_id=product.id %}
                     </div>
                 </div>
             </div>
@@ -56,9 +59,12 @@
                     </h5>
                     <p><small class="text-muted">{{product.category}}</small></p>
                     <p class="card-text">{{product.description}}</p>
-                    <p class="card-text"><strong>{{product.price_from_usd}} UAH</strong></p>
+                    <p class="card-text"><strong>{{ product.exchange_price }} UAH</strong></p>
                     <div class="text-center mt-3">
                         {% include 'parts/forms/add_to_cart.html' with product_id=product.id %}
+                    </div>
+                    <div class="text-center mt-3">
+                        {% include 'parts/forms/add_to_favorite.html' with product_id=product.id %}
                     </div>
                 </div>
             </div>

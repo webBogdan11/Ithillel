@@ -1,3 +1,5 @@
+from linecache import cache
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -12,6 +14,7 @@ def feedbacks(request, *args, **kwargs):
         form = FeedbackModelForm(user=user, data=request.POST)
         if form.is_valid():
             form.save()
+            Feedback.update_feedback_cache()
     else:
         form = FeedbackModelForm(user=user)
     context = {

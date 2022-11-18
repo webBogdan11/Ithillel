@@ -20,6 +20,11 @@ class Feedback(PKMixin):
         return 'feedbacks'
 
     @classmethod
+    def update_feedback_cache(cls):
+        feedbacks = cls.objects.all()
+        cache.set(cls._cache_key(), feedbacks)
+
+    @classmethod
     def get_feedbacks(cls):
         feedbacks = cache.get(cls._cache_key())
 
