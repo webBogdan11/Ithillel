@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'users',
     'products',
     'currencies',
+    'favorite',
     # extensions
     'django_celery_results',
     'django_celery_beat',

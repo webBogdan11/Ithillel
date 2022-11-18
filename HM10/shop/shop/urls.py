@@ -7,7 +7,8 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('feedback.urls')),
     path('', include('products.urls')),
-    path('', include('orders.urls'))
+    path('', include('orders.urls')),
+    path('', include('favorite.urls'))
 ]
 
 if settings.DEBUG:

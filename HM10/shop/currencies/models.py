@@ -24,5 +24,13 @@ class CurrencyHistory(PKMixin):
         default=1
     )
 
+    @classmethod
+    def last_curs(cls, currency_code, attr='sale') -> decimal.Decimal:
+        return getattr(cls.objects.filter(
+            currency=currency_code
+        ).order_by(
+            '-created_at'
+        ).first(), attr, decimal.Decimal('1.00'))
+
     def __str__(self):
         return f'{self.currency} {self.sale} {self.created_at}'
