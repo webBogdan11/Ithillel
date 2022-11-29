@@ -13,6 +13,11 @@
 </head>
 <body style="height:100%">
 
+{% block messages %}
+    {% include 'parts/messages.html' %}
+{% endblock messages %}
+
+
 {% block header %}
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
@@ -59,7 +64,7 @@
                 {% else %}
                 <span class="navbar-text">Hello <strong>Anonim</strong> ||</span>
                 <li><a class="nav-link" href="{% url 'users:login'%}">Log in</a></li>
-                <li><a class="nav-link" href="{% url 'users:login'%}">Sign up</a></li>
+                <li><a class="nav-link" href="{% url 'users:register'%}">Sign up</a></li>
                 {% endif %}
             </ul>
         </div>

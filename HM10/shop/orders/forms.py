@@ -24,7 +24,7 @@ class UpdateCartOrderForm(forms.Form):
         super().__init__(*args, *kwargs)
         self.instance = kwargs['instance']
 
-    def clean_product_id(self):
+    def clean_product(self):
         try:
             product = Product.objects.get(id=self.cleaned_data['product'])
         except Product.DoesNotExist:

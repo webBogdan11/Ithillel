@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 from orders.mixins import GetCurrentOrderMixin
 from orders.tasks import send_to_console_task
@@ -39,6 +40,8 @@ class UpdateCartView(GetCurrentOrderMixin, RedirectView):
         form = UpdateCartOrderForm(request.POST, instance=self.get_object())
         if form.is_valid():
             form.save(kwargs.get('action'))
+            messages.success(request,
+                             f'You {kwargs.get("action")} {form.cleaned_data["product"].name}')
         return self.get(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
@@ -61,5 +64,7 @@ class PurchaseView(GetCurrentOrderMixin, View):
 
     def post(self, request):
         self.get_object().pay()
+        messages.success(request,
+                         f'You order was successfully finished')
         send_to_console_task.delay()
         return render(request, self.template_name)

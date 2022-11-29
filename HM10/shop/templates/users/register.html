@@ -1,9 +1,21 @@
-<h1>Register here</h1>
-
-<p>If you want to log in click <a href="{% url 'users:login' %}">here</a></p>
-
-<form method="post" action="{% url 'users:register' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><input type="submit" value="Register"></p>
-</form>
+{% extends 'base.html' %}
+{% block content %}
+    <section class="registration">
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-4 offset-lg-4">
+                    <h2>Registration</h2>
+                    <form method="post">
+                        {% include 'parts/forms/simple_form.html' with form=form %}
+                        <input class="btn btn-primary mt-3" type="submit"
+                               value="Registration">
+                    </form>
+                    <p class="mt-3 text-center">
+                        <span>Have account?</span>
+                        <a href="{% url 'users:login' %}">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
