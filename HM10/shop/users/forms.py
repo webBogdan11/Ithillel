@@ -1,30 +1,49 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UsernameField, AuthenticationForm
+from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
-class UserCreationFrom(forms.ModelForm):
 
+class RegistrationForm(UserCreationForm):
     class Meta:
-        model = get_user_model()
-        fields = ('email', )
+        model = User
+        fields = ("email",)
+        field_classes = {'email': UsernameField}
 
-    password = forms.CharField(label='Password',
-                               widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password',
-                                widget=forms.PasswordInput)
+    def clean(self):
+        self.instance.username = self.cleaned_data['email'].split('@')[0]
+        try:
+            User.objects.get(username=self.instance.username)
+            raise ValidationError("A user with that username already exists.")
+        except User.DoesNotExist:
+            ...
+        return self.cleaned_data
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
-        return cd['password2']
 
-    def save(self, *args, **kwargs):
-        new_user = super().save(commit=False,)
-        email = self.cleaned_data['email']
-        new_user.username = email[:email.index('@')]
+class CustomAuthenticationForm(AuthenticationForm):
+    username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True}),
+                             required=False)
+    phone = forms.CharField(required=False)
 
-        new_user.set_password(
-            self.cleaned_data['password']
-        )
-        return new_user
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        phone = self.cleaned_data.get('phone')
+
+        if not username and not phone:
+            raise ValidationError('Email or phone number is required.')
+
+        if password:
+            kwargs = {'password': password, 'username': username}
+            if phone and not username:
+                kwargs.pop('username')
+                kwargs.update({'phone': phone})
+            self.user_cache = authenticate(self.request, **kwargs)
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            else:
+                self.confirm_login_allowed(self.user_cache)
+        return self.cleaned_data
