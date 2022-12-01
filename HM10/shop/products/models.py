@@ -7,6 +7,7 @@ from shop.mixins.models_mixins import PKMixin
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 from currencies.models import CurrencyHistory
 from shop.model_choices import Currency
+from shop.mixins.singletone_mixins import SingletonModel
 
 
 def upload_image(instance, filename):
@@ -82,3 +83,8 @@ class Product(PKMixin):
 
     def __str__(self):
         return f'{self.name} | {self.price} | {self.sku}'
+
+
+class Config(SingletonModel):
+    contact_form_email = models.EmailField(default="webbogdan11@gmail.com")
+

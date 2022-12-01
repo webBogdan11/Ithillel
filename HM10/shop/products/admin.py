@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from products.models import Product, Category
+from products.models import Product, Category, Config
 from shop.mixins.admin_mixins import ImageSnapshotAdminMixin
 
 
@@ -15,3 +15,6 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(ImageSnapshotAdminMixin, admin.ModelAdmin):
     pass
+
+
+admin.site.register(Config)

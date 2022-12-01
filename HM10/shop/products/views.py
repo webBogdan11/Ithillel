@@ -1,18 +1,30 @@
 import csv
-from django.http import HttpResponse, HttpResponseRedirect
+
+from django.contrib import messages
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView, \
+from django.views.generic import ListView, \
                                  DetailView, FormView
 from products.models import Product
-
+from products.forms import ContactForm
+from products.tasks import send_contact_form
 
 from products.forms import ImportCSVForm
 
 
-class IndexView(TemplateView):
+class IndexView(FormView):
     template_name = 'products/index.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('products:index')
+
+    def form_valid(self, form):
+        send_contact_form.delay(email=form.cleaned_data['email'],
+                                text=form.cleaned_data['text'])
+        messages.success(self.request, 'Email has been send.')
+
+        return super().form_valid(form)
 
 
 class ProductsListView(ListView):

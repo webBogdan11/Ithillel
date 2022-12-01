@@ -5,36 +5,46 @@
     <section class="main">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-                    <h1>Main</h1>
-                </div>
-
-                <div class="col-12">
-                    <p>Lorem ipsum, or lipsum as it is sometimes known,
-                        is dummy text used in laying out print, graphic or web designs.
-                        The passage is attributed to an unknown typesetter in the 15th century who is thought to
-                        have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.
-                        It usually begins with</p>
-                </div>
-
-                <div class="col-6">
-                    <p>Lorem ipsum, or lipsum as it is sometimes known,
-                        is dummy text used in laying out print, graphic or web designs.
-                        The passage is attributed to an unknown typesetter in the 15th century who is thought to
-                        have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.
-                        It usually begins with</p>
-                </div>
-
-                <div class="col-6">
-                    <p>Lorem ipsum, or lipsum as it is sometimes known,
-                        is dummy text used in laying out print, graphic or web designs.
-                        The passage is attributed to an unknown typesetter in the 15th century who is thought to
-                        have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.
-                        It usually begins with</p>
+                <div class="col-12 col-lg-6">
+                    <h2 class="py-3 py-lg-5">
+                        Your best friend is here...
+                    </h2>
+                    <p>
+                        It is a long established fact that a reader will be
+                        distracted by the readable content of a page when
+                        looking at its layout. The point of using Lorem Ipsum
+                        is that it has a more-or-less normal distribution of
+                        letters, as opposed to using 'Content here, content
+                        here', making it look like readable English. Many
+                        desktop publishing packages and web page editors now
+                        use Lorem Ipsum as their default model text, and a
+                        search for 'lorem ipsum' will uncover many web sites
+                        still in their infancy. Various versions have evolved
+                        over the years, sometimes by accident, sometimes on
+                        purpose (injected humour and the like).
+                    </p>
+                    <p>
+                        It is a long established fact that a reader will be
+                        distracted by the readable content of a page when
+                        looking at its layout. The point of using Lorem Ipsum
+                        is that it has a more-or-less normal distribution of
+                        letters, as opposed to using 'Content here, content
+                        here', making it look like readable English. Many
+                        desktop publishing packages and web page editors now
+                        use Lorem Ipsum as their default model text, and a
+                        search for 'lorem ipsum' will uncover many web sites
+                        still in their infancy. Various versions have evolved
+                        over the years, sometimes by accident, sometimes on
+                        purpose (injected humour and the like).
+                    </p>
+                    <p>
+                        <form method="post">
+                            {% include 'parts/forms/simple_form.html' with form=form %}
+                            <input type="submit" value="Send" class="btn btn-primary my-3">
+                        </form>
+                    </p>
                 </div>
             </div>
-
-
         </div>
     </section>
-{% endblock %}
+{% endblock content %}
