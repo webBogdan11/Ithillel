@@ -166,3 +166,4 @@ media/*
 HM10/shop/media
 HM10/shop/dump.rdb
 HM10/shop/celerybeat-schedule.db
+HM10/shop/django_cache

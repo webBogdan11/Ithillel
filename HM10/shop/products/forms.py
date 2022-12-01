@@ -45,3 +45,8 @@ class ImportCSVForm(forms.Form):
     def save(self):
         products_list = self.cleaned_data['file']
         Product.objects.bulk_create(products_list)
+
+
+class ContactForm(forms.Form):
+    email = forms.EmailField()
+    text = forms.CharField(widget=forms.Textarea)
