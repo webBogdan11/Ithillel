@@ -1,10 +1,17 @@
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import RedirectView, ListView
 from favorite.forms import UpdateFavoriteForm
 from django.urls import reverse_lazy
+from favorite.models import Favorite
 
 
-class FavoriteView(TemplateView):
+class FavoriteView(ListView):
     template_name = 'favorite/favorite_list.html'
+    model = Favorite
+    context_object_name = 'favorites'
+
+    def get_queryset(self):
+        favorites = super().get_queryset()
+        return favorites.filter(user=self.request.user).select_related('product')
 
 
 class UpdateFavoriteView(RedirectView):
