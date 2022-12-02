@@ -2,6 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormView
 from django.contrib.auth.views import LoginView as AuthLoginView
 from users.forms import RegistrationForm, CustomAuthenticationForm
@@ -30,7 +31,9 @@ class LoginView(AuthLoginView):
     def form_valid(self, form):
         messages.success(self.request,
                          f'Welcome back {form.get_user().email}!')
-        return super().form_valid(form)
+
+        login(self.request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend')
+        return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         messages.error(self.request,

@@ -32,11 +32,19 @@ class ProductsListView(ListView):
     context_object_name = 'products'
     template_name = 'products/products_list.html'
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related('category').prefetch_related('products')
+
 
 class ProductsDetail(DetailView):
     template_name = 'products/products_detail.html'
     model = Product
     context_object_name = 'product'
+
+    def get_queryset(self):
+        product = super().get_queryset()
+        return product.prefetch_related('products')
 
 
 def export_csv(request, *args, **kwargs):
