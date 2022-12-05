@@ -36,6 +36,10 @@ class CartView(GetCurrentOrderMixin, TemplateView):
 
 class UpdateCartView(GetCurrentOrderMixin, RedirectView):
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = UpdateCartOrderForm(request.POST, instance=self.get_object())
         if form.is_valid():
@@ -52,6 +56,10 @@ class UpdateCartView(GetCurrentOrderMixin, RedirectView):
 class RecalculateCartView(GetCurrentOrderMixin, RedirectView):
     url = reverse_lazy('orders:cart')
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = RecalculateCartForm(request.POST, instance=self.get_object())
         if form.is_valid():
@@ -61,6 +69,10 @@ class RecalculateCartView(GetCurrentOrderMixin, RedirectView):
 
 class PurchaseView(GetCurrentOrderMixin, View):
     template_name = 'orders/cart_purchase.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
         self.get_object().pay()

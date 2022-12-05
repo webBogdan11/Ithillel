@@ -38,14 +38,19 @@
                     <a class="nav-link {% block products_active %}{%endblock%}"
                        href="{% url 'products:products_list'%}">Products</a>
                 </li>
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link {% block feedbacks_active %}{%endblock%}"
                        href="{% url 'feedback:feedbacks'%}">Feedbacks</a>
                 </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link {% block favorite_active %}{%endblock%}"
                        href="{% url 'favorite:favorite_list'%}">Favorite</a>
                 </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
                 <li class="ml-auto nav-item">
                     <a class="nav-link {% block cart_active %}{%endblock%}" aria-current="page"
                        href="{% url 'orders:cart' %}">
@@ -56,6 +61,7 @@
                         </svg>
                     </a>
                 </li>
+                {% endif %}
             </ul>
             <ul class="navbar-nav mx-4">
                 {% if request.user.is_authenticated %}

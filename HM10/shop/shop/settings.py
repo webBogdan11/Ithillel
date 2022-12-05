@@ -1,6 +1,7 @@
 import environ
 from pathlib import Path
 from celery.schedules import crontab
+from django.urls import reverse_lazy
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -36,7 +37,8 @@ INSTALLED_APPS = [
     # extensions
     'django_celery_results',
     'django_celery_beat',
-    'silk'
+    'silk',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'silk.middleware.SilkyMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 ROOT_URLCONF = 'shop.urls'
@@ -130,9 +137,9 @@ MEDIA_ROOT = 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'login/'
-LOGOUT_URL = 'logout/'
+LOGIN_REDIRECT_URL = reverse_lazy('products:index')
+LOGIN_URL = reverse_lazy('users:login')
+LOGOUT_URL = reverse_lazy('users:logout')
 
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379"
