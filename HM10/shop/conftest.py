@@ -1,8 +1,12 @@
 import pytest
 from faker import Faker
 from products.models import Product, Category
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.test.client import Client
 
 fake = Faker()
+User = get_user_model()
 
 
 @pytest.fixture(scope='session')
@@ -37,3 +41,38 @@ def products(db):
 
     Product.objects.bulk_create(products)
     return
+
+
+@pytest.fixture(scope='function')
+def user(db):
+    user, _ = User.objects.get_or_create(
+        email='user@user.com',
+        username='user',
+        first_name='John Smith',
+        phone='123456789',
+        is_phone_valid=True
+    )
+    user.set_password('123456789')
+    user.save()
+    yield user
+
+
+@pytest.fixture(scope='function')
+def login_user(db):
+    phone = '123456789'
+    password = '123456789'
+    user, _ = User.objects.get_or_create(
+        email='user@user.com',
+        username='user',
+        first_name='John Smith',
+        phone=phone,
+        is_phone_valid=True
+    )
+    user.set_password(password)
+    user.save()
+    client = Client()
+    response = client.post(reverse('users:login'),
+                           data={'phone': phone,
+                                 'password': password})
+    assert response.status_code == 302
+    yield client, user
