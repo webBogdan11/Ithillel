@@ -13,5 +13,5 @@ class Favorite(models.Model):
     class Meta:
         unique_together = ('user', 'product')
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         return f'{self.user} -- {self.product}'

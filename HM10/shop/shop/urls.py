@@ -11,7 +11,7 @@ urlpatterns = [
     path('', include('favorite.urls'))
 ]
 
-if settings.DEBUG:
+if settings.DEBUG:  # pragma: no cover
     from django.conf.urls.static import static
 
     urlpatterns += static(settings.MEDIA_URL,

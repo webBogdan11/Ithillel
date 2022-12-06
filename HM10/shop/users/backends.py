@@ -23,9 +23,3 @@ class PhoneModelBackend(ModelBackend):
     def user_can_authenticate(self, user):
         can = super(PhoneModelBackend, self).user_can_authenticate(user)
         return can and user.is_phone_valid
-
-    def get_user(self, phone):
-        try:
-            return UserModel.objects.get(phone=phone)
-        except UserModel.DoesNotExist:
-            return None

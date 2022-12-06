@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GetCurrencyBaseClient:
+class GetCurrencyBaseClient:  # pragma: no cover
     base_url = None
 
     def _request(self, method: str,
@@ -25,7 +25,7 @@ class GetCurrencyBaseClient:
             return response.json()
 
 
-class PrivatBankAPI(GetCurrencyBaseClient):
+class PrivatBankAPI(GetCurrencyBaseClient):  # pragma: no cover
     base_url = 'https://api.privatbank.ua/p24api/pubinfo'
 
     def get_currency(self) -> dict:
@@ -52,7 +52,7 @@ class PrivatBankAPI(GetCurrencyBaseClient):
         )
 
 
-class MonoBankAPI(GetCurrencyBaseClient):
+class MonoBankAPI(GetCurrencyBaseClient):  # pragma: no cover
     base_url = 'https://api.monobank.ua/bank/currency'
 
     def get_currency(self):
