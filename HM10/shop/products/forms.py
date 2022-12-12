@@ -22,6 +22,7 @@ class ImportCSVForm(forms.Form):
     def clean_file(self):
         csv_file = self.cleaned_data['file']
         reader = csv.DictReader(StringIO(csv_file.read().decode('utf-8')))
+
         products_list = []
         for product in reader:
             try:

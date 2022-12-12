@@ -74,10 +74,9 @@ def export_csv(request, *args, **kwargs):
 class ImportCSV(FormView):
     form_class = ImportCSVForm
     template_name = 'products/products_csv_import.html'
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('products:index')
 
     @method_decorator(login_required)
-    @method_decorator(user_passes_test(lambda u: u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class SingletonModel(models.Model):
+class SingletonModel(models.Model): # pragma: no cover
 
     class Meta:
         abstract = True

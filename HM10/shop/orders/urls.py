@@ -12,4 +12,7 @@ urlpatterns = [
          name='recalculate_cart'),
     path('purchase/', views.PurchaseView.as_view(),
          name='purchase'),
+    path('apply-discount/',
+         views.ApplyDiscountView.as_view(),
+         name='apply_discount')
 ]

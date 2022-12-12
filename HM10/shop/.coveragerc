@@ -3,3 +3,4 @@ omit =
         *__init__*
         */migrations/*
         */settings_tests.py
+        conftest.py

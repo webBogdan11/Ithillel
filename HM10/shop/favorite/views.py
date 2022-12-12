@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from favorite.models import Favorite
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 class FavoriteView(ListView):
@@ -30,6 +31,10 @@ class UpdateFavoriteView(RedirectView):
         form = UpdateFavoriteForm(request.POST, user=request.user)
         if form.is_valid():
             form.save(kwargs.get('action'))
+        else:
+            messages.error(self.request,
+                           f'Wrong product id')
+
         return self.get(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):

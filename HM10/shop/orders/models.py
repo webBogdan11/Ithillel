@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 
 from shop.mixins.models_mixins import PKMixin
