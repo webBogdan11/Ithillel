@@ -5,16 +5,28 @@ from django.core.exceptions import ValidationError
 from products.models import Product
 
 
-class DiscountApply(forms.Form):
-    code = forms.CharField(max_length=10)
+class ApplyDiscountForm(forms.ModelForm):
+    class Meta:
+        model = Discount
+        fields = ('code',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, *kwargs)
+        self.order = kwargs['order']
 
     def clean_code(self):
-        code = Discount.objects.filter(code=self.cleaned_data['code']).first()
-        if code:
-            return code
-        else:
-            raise ValidationError(f"There is no discount "
-                                  f"with this code {self.cleaned_data['code']}")
+        try:
+            self.instance = Discount.objects.get(
+                code=self.cleaned_data['code'],
+                is_active=True
+            )
+        except Discount.DoesNotExist:
+            raise ValidationError('Wrong discount code.')
+        return self.cleaned_data['code']
+
+    def apply(self):
+        self.order.discount = self.instance
+        self.order.save(update_fields=('discount',))
 
 
 class UpdateCartOrderForm(forms.Form):
@@ -33,6 +45,7 @@ class UpdateCartOrderForm(forms.Form):
 
     def save(self, action):
         getattr(self.instance.products, action)(self.cleaned_data['product'])
+        self.instance.save()
 
 
 class RecalculateCartForm(forms.Form):
@@ -40,9 +53,9 @@ class RecalculateCartForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, *kwargs)
         self.instance = kwargs['instance']
-        self.fields = {k: forms.IntegerField() if k.startswith(
-            'quantity') else forms.UUIDField() for k in self.data.keys() if
-                       k != 'csrfmiddlewaretoken'}
+        self.fields = {k: forms.IntegerField() if k.startswith('quantity')
+                       else forms.UUIDField() for k in self.data.keys() if
+                       k.startswith(('quantity', 'product'))}
 
     def save(self):
         """
@@ -58,6 +71,7 @@ class RecalculateCartForm(forms.Form):
             if k.startswith('product_'):
                 index = k.split('_')[-1]
                 self.instance.products.through.objects \
-                    .filter(product_id=self.cleaned_data[f'product_{index}']) \
+                    .filter(order=self.instance,
+                            product_id=self.cleaned_data[f'product_{index}']) \
                     .update(quantity=self.cleaned_data[f'quantity_{index}'])
         return self.instance

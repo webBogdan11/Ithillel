@@ -54,7 +54,7 @@ def test_login_user(client, faker):
     assert response.status_code == 302
 
 
-def test_register_user(client, faker, user):
+def test_register_user(client, faker, user_usual):
     url = reverse('users:register')
 
     response = client.get(url)
@@ -85,7 +85,7 @@ def test_register_user(client, faker, user):
     assert response.status_code == 200
     assert response.redirect_chain[0][0] == reverse('products:index')
 
-    data['email'] = user.email
+    data['email'] = user_usual.email
     response = client.post(url, data=data)
 
     assert response.status_code == 200

@@ -28,5 +28,3 @@ class UpdateFavoriteForm(forms.Form):
             favorite_obj.save()
         elif action == 'remove':
             Favorite.objects.filter(user=self.user, product=self.cleaned_data['product']).delete()
-        else:
-            raise Exception('Wrong parameters passed')

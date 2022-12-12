@@ -8,7 +8,7 @@ from django.contrib import messages
 
 from orders.mixins import GetCurrentOrderMixin
 from orders.tasks import send_to_console_task
-from orders.forms import UpdateCartOrderForm, RecalculateCartForm
+from orders.forms import UpdateCartOrderForm, RecalculateCartForm, ApplyDiscountForm
 
 
 class CartView(GetCurrentOrderMixin, TemplateView):
@@ -63,7 +63,8 @@ class RecalculateCartView(GetCurrentOrderMixin, RedirectView):
     def post(self, request, *args, **kwargs):
         form = RecalculateCartForm(request.POST, instance=self.get_object())
         if form.is_valid():
-            form.save()
+            order = form.save()
+            order.save()
         return self.get(request, *args, **kwargs)
 
 
@@ -79,4 +80,19 @@ class PurchaseView(GetCurrentOrderMixin, View):
         messages.success(request,
                          f'You order was successfully finished')
         send_to_console_task.delay()
+
         return render(request, self.template_name)
+
+
+class ApplyDiscountView(GetCurrentOrderMixin, RedirectView):
+    url = reverse_lazy('orders:cart')
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = ApplyDiscountForm(request.POST, order=self.get_object())
+        if form.is_valid():
+            form.apply()
+        return self.get(request, *args, **kwargs)

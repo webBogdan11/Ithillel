@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 
 
-class ImageSnapshotAdminMixin:
+class ImageSnapshotAdminMixin: # pragma: no cover
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = super().get_readonly_fields(request, obj)
         if isinstance(readonly_fields, list):
