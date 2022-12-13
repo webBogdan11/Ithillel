@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.core import mail
 import csv
-from io import StringIO
+import os
 from products.models import Product
 
 

@@ -1,31 +1,10 @@
-from requests import request, exceptions
+from shop.api_clients import BaseClient
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class GetCurrencyBaseClient:  # pragma: no cover
-    base_url = None
-
-    def _request(self, method: str,
-                 params: dict = None,
-                 headers: dict = None,
-                 data: dict = None):
-        try:
-            response = request(
-                url=self.base_url,
-                method=method,
-                params=params or {},
-                data=data or {},
-                headers=headers or {}
-            )
-        except exceptions.RequestException as e:
-            logger.error(e)
-        else:
-            return response.json()
-
-
-class PrivatBankAPI(GetCurrencyBaseClient):  # pragma: no cover
+class PrivatBankAPI(BaseClient):  # pragma: no cover
     base_url = 'https://api.privatbank.ua/p24api/pubinfo'
 
     def get_currency(self) -> dict:
@@ -52,7 +31,7 @@ class PrivatBankAPI(GetCurrencyBaseClient):  # pragma: no cover
         )
 
 
-class MonoBankAPI(GetCurrencyBaseClient):  # pragma: no cover
+class MonoBankAPI(BaseClient):  # pragma: no cover
     base_url = 'https://api.monobank.ua/bank/currency'
 
     def get_currency(self):
