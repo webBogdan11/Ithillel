@@ -9,4 +9,5 @@ urlpatterns = [
     path('products_detail/<uuid:pk>', views.ProductsDetail.as_view(), name='products_detail'),
     path('products/export_csv/', views.export_csv, name='export_csv'),
     path('products/import_csv/', views.ImportCSV.as_view(), name='import_csv'),
+    path('products/parse', views.parse_products_view, name='parse'),
 ]

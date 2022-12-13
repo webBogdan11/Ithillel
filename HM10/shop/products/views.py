@@ -10,6 +10,7 @@ from django.views.generic import ListView, \
 from products.models import Product
 from products.forms import ContactForm
 from products.tasks import send_contact_form
+from products.tasks import parse_products
 
 from products.forms import ImportCSVForm
 
@@ -84,3 +85,7 @@ class ImportCSV(FormView):
         form.save()
         return super().form_valid(form)
 
+
+def parse_products_view(request):
+    parse_products.delay()
+    return HttpResponse('Hello')
