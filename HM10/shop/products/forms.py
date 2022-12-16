@@ -6,6 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from products.models import Product, Category
+from currencies.models import Currency
 
 
 class CsvImport(forms.Form):
@@ -51,3 +52,16 @@ class ImportCSVForm(forms.Form):
 class ContactForm(forms.Form):
     email = forms.EmailField()
     text = forms.CharField(widget=forms.Textarea)
+
+
+class ProductFilterForm(forms.Form):
+    category = forms.ModelChoiceField(
+        required=False,
+        queryset=Category.objects.all(),
+        empty_label="Select"
+    )
+    currency = forms.ChoiceField(
+        required=False,
+        choices=[('', 'Select')] + Currency.choices,
+    )
+    name = forms.CharField(max_length=255, required=False)

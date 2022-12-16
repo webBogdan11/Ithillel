@@ -16,7 +16,7 @@ class Parser(BaseClient):
         soup = BeautifulSoup(response, features="html5lib")
         try:
             category_name = soup.find('h1', attrs={'class': "mt16 mb16"}).string
-            description = soup.find('div', attrs={'class': "ovh seotext-0-2-526 card"}).div.p.string
+            description = soup.find('div', attrs={'class': 'ovh seotext-0-2-270 card'}).div.p.string
         except (AssertionError, IndexError) as err:
             logger.error(err)
         else:
@@ -27,7 +27,7 @@ class Parser(BaseClient):
                 try:
                     name = element.div.find('a')['title']
 
-                    price = element.div.find('div', attrs={'class': "medium fz16 price-0-2-324"}).contents[0]
+                    price = element.div.find('div', attrs={'class': "medium fz16 price-0-2-569"}).contents[0]
 
                     img = element.div.find('div', attrs={'class': 'pt8 pr'}).a.img['src']
 
@@ -46,5 +46,3 @@ class Parser(BaseClient):
 
 
 citrus_parser = Parser()
-
-print(citrus_parser.parse()[0]['image'])
