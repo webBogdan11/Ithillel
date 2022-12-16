@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.core import mail
+import re
+
 
 User = get_user_model()
 
@@ -54,40 +57,38 @@ def test_login_user(client, faker):
     assert response.status_code == 302
 
 
-def test_register_user(client, faker, user_usual):
+def test_register_user(client, faker):
+    email = faker.email()
+    password = faker.password()
+
     url = reverse('users:register')
 
-    response = client.get(url)
-    assert response.status_code == 200
-    assert response.template_name[0] == 'users/register.html'
-
-    email = faker.email()
+    assert not User.objects.filter(email=email).exists()
+    assert len(mail.outbox) == 0
 
     data = {
-        'email': email
+        'password1': password,
+        'password2': password,
+        'email': email,
     }
-
     response = client.post(url, data=data)
+    assert response.status_code == 302
+    assert User.objects.filter(email=email, is_active=False).exists()
+    assert len(mail.outbox) == 1
+
+    response = client.post(reverse('users:login'),
+                           data={'email': email, 'password': password})
     assert response.status_code == 200
-    assert response.context['form'].errors == {'password1': ['This field is required.'],
-                                               'password2': ['This field is required.']}
 
-    data['password1'] = faker.password()
-    data['password2'] = faker.password()
+    uidb64, token = re.search("registration/(.*)/(.*)/confirm",
+                              mail.outbox[0].body).groups()
 
-    response = client.post(url, data=data)
-    assert response.status_code == 200
-    assert response.context['form'].errors == {'password2': ['The two password fields didn’t match.']}
+    response = client.get(reverse('users:registration_confirm',
+                                  args=(uidb64, token)))
+    assert response.status_code == 302
+    assert User.objects.filter(email=email, is_active=True).exists()
 
-    data['password2'] = data['password1']
-
-    response = client.post(url, data=data, follow=True)
-    assert response.status_code == 200
-    assert response.redirect_chain[0][0] == reverse('products:index')
-
-    data['email'] = user_usual.email
-    response = client.post(url, data=data)
-
-    assert response.status_code == 200
-    assert response.context['form'].errors['__all__'] == ['A user with that username already exists.']
+    response = client.post(reverse('users:login'),
+                           data={'username': email, 'password': password})
+    assert response.status_code == 302
 
