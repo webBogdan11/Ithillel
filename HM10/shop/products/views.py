@@ -13,6 +13,7 @@ from products.tasks import send_contact_form
 from products.tasks import parse_products
 
 from products.forms import ImportCSVForm
+from shop.helpers import clean_filters
 
 
 class IndexView(FormView):
@@ -39,14 +40,12 @@ class ProductsListView(ListView):
         category_id = self.request.GET.get('category')
         currency = self.request.GET.get('currency')
         name = self.request.GET.get('name')
-
         if category_id:
             queryset = queryset.filter(category_id=category_id)
         if currency:
             queryset = queryset.filter(currency=currency)
         if name:
             queryset = queryset.filter(name__icontains=name)
-
         return queryset
 
     def get_queryset(self):
