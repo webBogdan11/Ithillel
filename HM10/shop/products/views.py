@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse_lazy
 from django.views.generic import ListView, \
                                  DetailView, FormView
-from products.models import Product
+from products.models import Product, Category
 from products.forms import ContactForm, ProductFilterForm
 from products.tasks import send_contact_form
 from products.tasks import parse_products
@@ -42,10 +42,14 @@ class ProductsListView(ListView):
         name = self.request.GET.get('name')
         if category_id:
             queryset = queryset.filter(category_id=category_id)
+            self.filter_form.base_fields['category'].initial = Category.objects.get(id=category_id)
         if currency:
             queryset = queryset.filter(currency=currency)
+            self.filter_form.base_fields['currency'].initial = currency
         if name:
             queryset = queryset.filter(name__icontains=name)
+            self.filter_form.base_fields['name'].initial = name
+
         return queryset
 
     def get_queryset(self):
