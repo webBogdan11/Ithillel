@@ -23,3 +23,8 @@ def send_html_mail(subject_template_name,
         email_message.attach_alternative(html_email, 'text/html')
 
     email_message.send()
+
+
+def clean_filters(filters):
+    filters = {k: v for k, v in filters.items() if v}
+    return filters
