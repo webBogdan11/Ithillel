@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'silk',
     'debug_toolbar',
     'widget_tweaks',
+    'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
