@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-12">
             <form>
-                {{filter_form}}
+                {% include 'parts/forms/filter_form.html' with form=filter.form %}
                 <button class="btn btn-primary" type="submit">Filter</button>
             </form>
         </div>

@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'products',
     'currencies',
     'favorite',
-    'django_filters',
+
     # extensions
     'django_celery_results',
     'django_celery_beat',
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'drf_yasg',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
