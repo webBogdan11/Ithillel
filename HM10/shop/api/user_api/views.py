@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-
+from django_filters import rest_framework as filters
 from api.user_api.serializers import UsersSerializer, FavoriteSerializer
 from django.contrib.auth import get_user_model
 
@@ -19,6 +19,8 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UsersSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('phone', 'email')
 
     @action(detail=True, methods=['get'], url_path='favorite_products',
             serializer_class=FavoriteSerializer)

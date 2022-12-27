@@ -3,9 +3,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-
+from django_filters import rest_framework as filters
 from api.products.serializers import ProductSerializer, CategorySerializer
 from products.models import Product, Category
+from api.products.filters import ProductApiFilter
 
 
 class ProductsViewSet(
@@ -16,6 +17,8 @@ class ProductsViewSet(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ProductApiFilter
 
 
 class CategoryViewSet(
