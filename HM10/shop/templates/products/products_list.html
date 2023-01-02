@@ -49,7 +49,7 @@
                         <div class="text-center mt-3">
                             {% include 'parts/forms/add_to_cart.html' with product_id=product.id %}
                         </div>
-                        <div class="text-center mt-3">
+                        <div class="add-or-remove-favorite text-center mt-3">
                             {% include 'parts/forms/add_to_favorite.html' with product_id=product.id %}
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                         <p class="card-text">{{product.description}}</p>
                         <p class="card-text"><strong>{{ product.exchange_price }} UAH</strong></p>
                         <div class="text-center mt-3">
-                            {% include 'parts/forms/add_to_cart.html' with product_id=product.id %}
+                            {% include 'parts/forms/add_to_cart.html' with product=product %}
                         </div>
                         <div class="text-center mt-3">
                             {% include 'parts/forms/add_to_favorite.html' with product_id=product.id %}
@@ -82,42 +82,58 @@
             {% endfor %}
         </div>
         <div class="col-12">
-                    <div>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?{% url_replace request 'page' 1 %}">&laquo;
-                                            first</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           href="?{% url_replace request 'page' page_obj.previous_page_number %}">previous</a>
-                                    </li>
-                                {% endif %}
-                                {% for i in "x"|rjust:page_obj.paginator.num_pages   %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?{% url_replace request 'page' forloop.counter %}">
-                                            {{ forloop.counter }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           href="?{% url_replace request 'page' page_obj.next_page_number %}">next</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last
-                                            &raquo;</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% url_replace request 'page' 1 %}">&laquo;
+                                first</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' page_obj.previous_page_number %}">previous</a>
+                        </li>
+                        {% endif %}
+                        {% for i in "x"|rjust:page_obj.paginator.num_pages %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% url_replace request 'page' forloop.counter %}">
+                                {{ forloop.counter }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' page_obj.next_page_number %}">next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">last
+                                &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
-        {% endblock %}
+{% endblock %}
 
+{% block scripts %}
+<script>
+         $(document).ready(function () {
+             $('.add-or-remove-favorite').click(function (e) {
+             e.preventDefault();
+             const formData = {
+                                product: $(this).siblings('#product_id').val(),
+                                action: $(this).siblings('#favorite_action').val(),};
+             const url = "{% url 'favorite:ajax_add_or_remove_favorite' %}";
+             add_or_remove_favorite(url, $(this), formData, '{{ csrf_token }}');
+             })
+             $("#add_to_favorite").trigger("reset");
+         })
+
+</script>
+{% endblock scripts %}

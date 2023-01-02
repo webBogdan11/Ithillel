@@ -5,7 +5,10 @@ app_name = 'favorite'
 
 urlpatterns = [
     path('favorite_list/', views.FavoriteView.as_view(), name='favorite_list'),
-    re_path(r'favorite/(?P<action>save|remove)/',
-            views.UpdateFavoriteView.as_view(),
-            name='update_favorite'),
-]
+    # re_path(r'favorite/(?P<action>save|remove)/',
+    #         views.UpdateFavoriteView.as_view(),
+    #         name='update_favorite'),
+    path('favorite/',
+         views.AJAXFavoriteProductAddOrRemoveView.as_view(),
+         name='ajax_add_or_remove_favorite'),
+    ]

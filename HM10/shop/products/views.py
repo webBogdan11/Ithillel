@@ -2,19 +2,19 @@ import csv
 
 from django.contrib import messages
 from django.http import HttpResponse
+from django.db.models import OuterRef, Exists
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse_lazy
-from django.views.generic import ListView, \
-                                 DetailView, FormView
+from django.views.generic import DetailView, FormView
 from django_filters.views import FilterView
-from products.models import Product, Category
-from products.forms import ContactForm, ProductFilterForm
+from products.models import Product
+from products.forms import ContactForm
 from products.tasks import send_contact_form
 from products.tasks import parse_products
 from products.filters import ProductFilter
 from products.forms import ImportCSVForm
-from shop.helpers import clean_filters
+from favorite.models import Favorite
 
 
 class IndexView(FormView):
@@ -39,6 +39,13 @@ class ProductsView(FilterView):
 
     def get_queryset(self):
         qs = self.model.get_products()
+        if self.request.user.is_authenticated:
+            sq = Favorite.objects.filter(
+                product=OuterRef('id'),
+                user=self.request.user
+            )
+            qs = qs.annotate(is_favorite=Exists(sq))
+
         return qs.select_related('category').prefetch_related('products')
 
 

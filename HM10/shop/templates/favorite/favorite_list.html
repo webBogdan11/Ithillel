@@ -29,3 +29,21 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+
+<script>
+         $(document).ready(function () {
+             $('.add-or-remove-favorite').click(function (e) {
+             e.preventDefault();
+             const formData = {
+                                product: $(this).siblings('#product_id').val(),
+                                action: $(this).siblings('#favorite_action').val(),};
+             const url = "{% url 'favorite:ajax_add_or_remove_favorite' %}";
+             add_or_remove_favorite(url, $(this), formData, '{{ csrf_token }}');
+             $(this).parents('.card').addClass('d-none');
+             });
+             $("#add_to_favorite").trigger("reset");
+         })
+
+</script>
+{% endblock scripts %}
