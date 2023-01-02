@@ -1,10 +1,15 @@
 from django.views.generic import RedirectView, ListView
 from favorite.forms import UpdateFavoriteForm
 from django.urls import reverse_lazy
-from favorite.models import Favorite
+import json
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from shop.decorators import ajax_required
+from django.views import View
+from django.http import JsonResponse
+from favorite.models import Favorite
+from products.models import Product
 
 
 class FavoriteView(ListView):
@@ -40,3 +45,21 @@ class UpdateFavoriteView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy(
             'favorite:favorite_list' if kwargs['action'] == 'remove' else 'products:products_list')
+
+
+class AJAXFavoriteProductAddOrRemoveView(View):
+
+    @method_decorator(ajax_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = json.load(request).get('data')
+        form = UpdateFavoriteForm(data, user=request.user)
+        if form.is_valid():
+            form.save()
+        else:
+            return JsonResponse(data={'error': form.errors}, status=400)
+
+        return JsonResponse(data={'success': True,
+                                  'action': data['action']})
