@@ -4,13 +4,13 @@ import io
 from django.core.files.images import ImageFile
 from django.core.mail import send_mail
 from shop.celery import app
-from products.models import Config
+# from products.models import Config
 from shop.settings import EMAIL_HOST_USER
 from shop.api_clients import BaseClient
 from products.models import Category, Product
 from products.client.client import citrus_parser
 
-email_config = Config.load()
+# email_config = Config.load()
 
 
 @app.task
@@ -19,7 +19,7 @@ def send_contact_form(email, text):
         'Message from client',
         f'From {email} Message: {text}',
         from_email=EMAIL_HOST_USER,
-        recipient_list=[email_config.contact_form_email],
+        # recipient_list=[email_config.contact_form_email],
     )
 
 
