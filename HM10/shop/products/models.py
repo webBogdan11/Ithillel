@@ -85,6 +85,6 @@ class Product(PKMixin):
         return f'{self.name} | {self.price} | {self.sku}'
 
 
-class Config(SingletonModel):
-    contact_form_email = models.EmailField(default="webbogdan11@gmail.com")
+# class Config(SingletonModel):
+#     contact_form_email = models.EmailField(default="webbogdan11@gmail.com")
 
